@@ -66,15 +66,35 @@ mvn spring-boot:run
 
 ## 🗃️ Hướng Dẫn Khởi Tạo Dữ Liệu Giả Lập (Mock Data)
 
-Hệ thống đã cấu hình Database Seeder mặc định tự động chạy khi khởi động nếu cơ sở dữ liệu trống.
-Ngoài ra, để thực hiện stress-test hoặc demo giao diện với tập dữ liệu phong phú (60 học sinh, 40 phụ huynh, 240 đầu điểm tổng kết, 300+ phiếu điểm chi tiết và sổ sách đầy đủ), hãy import file [seed_data.sql](file:///d:/student-management/seed_data.sql) vào MySQL.
+Hệ thống đã cấu hình Database Seeder tự động chạy khi khởi động nếu cơ sở dữ liệu trống.
+Ngoài ra, để trải nghiệm giao diện với dữ liệu lớn thực tế (60 học sinh, 40 phụ huynh, 240 đầu điểm tổng kết, hàng trăm phiếu điểm và sổ đầu bài), bạn có thể tự import file `seed_data.sql` đính kèm trong dự án.
 
-### Danh sách tài khoản dùng thử mẫu (Mật khẩu mặc định: `123456`):
+### Bước 1: Import file SQL vào cơ sở dữ liệu
+
+Hãy mở Terminal/Command Prompt, di chuyển đến thư mục gốc của dự án và chạy một trong các lệnh sau (tùy thuộc vào môi trường chạy MySQL của bạn):
+
+**Trường hợp 1: Bạn cài đặt MySQL Server trực tiếp trên máy tính**
+```bash
+# Câu lệnh chuẩn (sẽ yêu cầu nhập mật khẩu MySQL của bạn):
+mysql -u root -p student_management < seed_data.sql
+```
+
+**Trường hợp 2: Bạn chạy MySQL thông qua Docker (ví dụ container tên là `mysql-container`)**
+```bash
+# Lệnh kết nối trực tiếp vào container và import (thay 123456 bằng mật khẩu thật):
+docker exec -i mysql-container mysql -u root -p123456 student_management < seed_data.sql
+```
+
+### Bước 2: Đăng nhập bằng các tài khoản dùng thử mẫu
+
+Sau khi import thành công, dữ liệu đã được gán sẵn các tài khoản sau (Mật khẩu mặc định cho tất cả là: `123456`):
+
 - **Quản trị viên (ADMIN):** `admin.hung`
-- **Cán bộ giáo vụ (EDUCATION_OFFICER):** `gv.vananh` hoặc `gv.trung`
+- **Cán bộ giáo vụ (EDUCATION_OFFICER):** `gv.anh` hoặc `gv.trung`
 - **Giáo viên bộ môn / Chủ nhiệm (TEACHER):**
-  - `gv.bichngoc` (Chủ nhiệm 10 Toán 1)
-  - `gv.dung` (Chủ nhiệm 11 Lý 1)
-  - `gv.quan` (Chủ nhiệm 10 Tin 1)
-  - `gv.thuy` (Chủ nhiệm 12 Văn 1)
-- **Phụ huynh học sinh (PARENT):** `ph.minh` hoặc `ph.huong`
+  - `gv.ngoc` (Lê Thị Bích Ngọc - Chủ nhiệm 10 Toán 1)
+  - `gv.dung` (Trần Văn Dũng - Chủ nhiệm 11 Lý 1)
+  - `gv.quan` (Hoàng Minh Quân - Chủ nhiệm 10 Tin 1)
+  - `gv.thuy` (Ngô Thị Phương Thùy - Chủ nhiệm 12 Văn 1)
+  - Hoặc thử các tài khoản giáo viên khác: `gv.lien`, `gv.hoan`, `gv.tam`, `gv.son`, `gv.xuan`...
+- **Phụ huynh học sinh (PARENT):** `ph.quan1`, `ph.hai1`, `ph.vy1`, `ph.mai1`... (có tới 40 tài khoản theo quy tắc `ph.tên_phụ_huynh` kèm số)
