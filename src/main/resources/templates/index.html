@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Học sinh - THPT Nguyễn Trãi</title>
+    <!-- Fonts & Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Structured Styleheet -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body class="dark-theme">
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="screen active">
+        <div class="login-bg"></div>
+        <div class="login-container glass">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>EDU PORTAL</span>
+                </div>
+                <h2>Đăng nhập Hệ thống</h2>
+                <p>Cổng thông tin quản lý học sinh trường THPT Nguyễn Trãi</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fa-solid fa-user"></i> Tên đăng nhập</label>
+                    <input type="text" id="username" required placeholder="Nhập tên đăng nhập (e.g. admin)">
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="password" required placeholder="Nhập mật khẩu (e.g. 123456)">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span>Đăng nhập</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+            <div class="login-footer">
+                <p>Tài khoản dùng thử:</p>
+                <div class="demo-accounts">
+                    <span><strong>Admin:</strong> admin/123456</span>
+                    <span><strong>Giáo vụ:</strong> officer/123456</span>
+                    <span><strong>Giáo viên:</strong> teacher/123456</span>
+                    <span><strong>Phụ huynh:</strong> parent/123456</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCREEN -->
+    <div id="app-screen" class="screen">
+        <div class="app-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar glass">
+                <div class="sidebar-header">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>EDU PORTAL</span>
+                </div>
+                <div class="user-profile-summary">
+                    <div class="avatar"><i class="fa-solid fa-circle-user"></i></div>
+                    <div class="info">
+                        <h4 id="user-display-name">Người dùng</h4>
+                        <span id="user-display-role" class="badge">Vai trò</span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-tab="schools-tab"><i class="fa-solid fa-school"></i> Trường
+                        học</button>
+                    <button class="nav-item" data-tab="classrooms-tab"><i class="fa-solid fa-chalkboard-user"></i> Lớp
+                        học</button>
+                    <button class="nav-item" data-tab="staffs-tab"><i class="fa-solid fa-users-gear"></i> Nhân viên /
+                        GV</button>
+                    <button class="nav-item" data-tab="students-tab"><i class="fa-solid fa-user-graduate"></i> Học
+                        sinh</button>
+                    <button class="nav-item" data-tab="subjects-tab"><i class="fa-solid fa-book-open"></i> Môn
+                        học</button>
+                    <button class="nav-item" data-tab="grades-tab"><i class="fa-solid fa-star"></i> Phiếu & Bảng
+                        Điểm</button>
+                    <button class="nav-item" data-tab="journals-tab"><i class="fa-solid fa-book"></i> Sổ đầu
+                        bài</button>
+                    <button class="nav-item" data-tab="report-cards-tab"><i class="fa-solid fa-address-book"></i> Sổ học
+                        bạ</button>
+                    <button class="nav-item" data-tab="cards-tab"><i class="fa-solid fa-id-card"></i> Thẻ học
+                        sinh</button>
+                    <button class="nav-item" data-tab="parents-tab"><i class="fa-solid fa-users"></i> Phụ huynh</button>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button id="btn-logout" class="btn btn-danger btn-block"><i
+                            class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <header class="content-header">
+                    <h1 id="tab-title">Quản lý Trường học</h1>
+                    <div class="header-actions">
+                        <span class="system-time"><i class="fa-regular fa-clock"></i> <span
+                                id="current-time"></span></span>
+                    </div>
+                </header>
+
+                <section class="content-body">
+                    <!-- Dynamic Search and Filters bar -->
+                    <div class="filter-bar glass">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="global-search" placeholder="Tìm kiếm nhanh...">
+                        </div>
+                        <div class="filter-actions">
+                            <button id="btn-add-record" class="btn btn-success"><i class="fa-solid fa-plus"></i> Thêm
+                                mới</button>
+                        </div>
+                    </div>
+
+                    <!-- TAB CONTENTS -->
+                    <div class="tab-panels">
+                        <!-- Schools Tab -->
+                        <div id="schools-tab" class="tab-panel active">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên trường</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Loại</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="schools-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Classrooms Tab -->
+                        <div id="classrooms-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên lớp</th>
+                                            <th>Khối</th>
+                                            <th>Niên khóa</th>
+                                            <th>Trường</th>
+                                            <th>GV Chủ nhiệm</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="classrooms-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Staffs Tab -->
+                        <div id="staffs-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Ngày sinh</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Vai trò</th>
+                                            <th>Trường</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="staffs-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Students Tab -->
+                        <div id="students-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Mã HS</th>
+                                            <th>Họ và tên</th>
+                                            <th>Ngày sinh</th>
+                                            <th>Giới tính</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Lớp học</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="students-list"></tbody>
+                                </table>
+                            </div>
+                            <div class="pagination-bar" id="students-pagination"></div>
+                        </div>
+
+                        <!-- Subjects Tab -->
+                        <div id="subjects-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên môn học</th>
+                                            <th>Mô tả</th>
+                                            <th>Giáo viên phụ trách</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="subjects-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Grades (Grade slips & Score records) Tab -->
+                        <div id="grades-tab" class="tab-panel">
+                            <div class="tabs-sub-header">
+                                <button class="tab-sub-btn active" data-sub="score-records-panel">Bảng điểm tổng
+                                    kết</button>
+                                <button class="tab-sub-btn" data-sub="grade-slips-panel">Phiếu điểm chi tiết</button>
+                            </div>
+
+                            <!-- Score Records sub-panel -->
+                            <div id="score-records-panel" class="sub-panel active">
+                                <div class="table-container glass">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Học sinh</th>
+                                                <th>Môn học</th>
+                                                <th>Kỳ học</th>
+                                                <th>Niên khóa</th>
+                                                <th>Điểm 15p</th>
+                                                <th>Điểm 45p</th>
+                                                <th>Điểm Thi</th>
+                                                <th>Điểm TB</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="scores-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Grade Slips sub-panel -->
+                            <div id="grade-slips-panel" class="sub-panel">
+                                <div class="table-container glass">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Học sinh</th>
+                                                <th>Môn học</th>
+                                                <th>Tên bài kiểm tra</th>
+                                                <th>Loại</th>
+                                                <th>Điểm số</th>
+                                                <th>Ngày kiểm tra</th>
+                                                <th>Ghi chú</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="grade-slips-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Class Journals Tab -->
+                        <div id="journals-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Lớp</th>
+                                            <th>Ngày giảng dạy</th>
+                                            <th>Tiết</th>
+                                            <th>Môn học</th>
+                                            <th>Giáo viên</th>
+                                            <th>Nội dung bài học</th>
+                                            <th>Sĩ số vắng</th>
+                                            <th>Nhận xét</th>
+                                            <th>Điểm tiết</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="journals-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Report Cards Tab -->
+                        <div id="report-cards-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Mã HS</th>
+                                            <th>Học sinh</th>
+                                            <th>Năm học</th>
+                                            <th>Khối</th>
+                                            <th>Điểm GPA</th>
+                                            <th>Hạnh kiểm</th>
+                                            <th>Nhận xét của GV</th>
+                                            <th>Ý kiến Phụ huynh</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-cards-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Student Cards Tab -->
+                        <div id="cards-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Mã HS</th>
+                                            <th>Học sinh</th>
+                                            <th>Mã số thẻ</th>
+                                            <th>Ngày cấp</th>
+                                            <th>Ngày hết hạn</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cards-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Parents Tab -->
+                        <div id="parents-tab" class="tab-panel">
+                            <div class="table-container glass">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Họ và tên</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Email</th>
+                                            <th>Nghề nghiệp</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Học sinh liên kết</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="parents-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- GENERAL MODAL FORM -->
+    <div id="modal-container" class="modal">
+        <div class="modal-content glass">
+            <div class="modal-header">
+                <h3 id="modal-title">Thêm bản ghi mới</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="dynamic-form">
+                    <!-- Form fields will be dynamically generated by JS -->
+                    <div id="form-fields"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary close-modal-btn">Hủy bỏ</button>
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decoupled Javascripts layers -->
+    <script src="/js/api.js?v=1.2"></script>
+    <script src="/js/ui.js?v=1.2"></script>
+    <script src="/js/auth.js?v=1.2"></script>
+    <script src="/js/app.js?v=1.2"></script>
+</body>
+
+</html>
